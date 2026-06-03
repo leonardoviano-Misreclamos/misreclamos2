@@ -46,7 +46,7 @@ export function AgentsList({ agentes }: { agentes: Agent[] }) {
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
       <div className="border-b border-slate-100 bg-slate-50 px-4 py-3">
-        <h2 className="text-sm font-semibold text-slate-800">Equipo de Soporte</h2>
+        <h2 className="text-sm font-semibold text-slate-800">Equipo de Abogados</h2>
       </div>
       <div className="divide-y divide-slate-100">
         {agentes.length === 0 ? (
@@ -66,7 +66,7 @@ export function AgentsList({ agentes }: { agentes: Agent[] }) {
                         : "bg-blue-100 text-blue-800"
                     }`}
                   >
-                    {agente.role === "ADMIN" ? "Admin" : "Soporte"}
+                    {agente.role === "ADMIN" ? "Admin" : "Abogado"}
                   </span>
                 </div>
                 <div className="mt-1 text-xs text-slate-500">{agente.email}</div>
