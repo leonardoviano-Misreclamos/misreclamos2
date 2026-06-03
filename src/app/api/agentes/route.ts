@@ -12,7 +12,7 @@ const createAgentSchema = z.object({
   phone: z.string().min(10, "El teléfono debe tener al menos 10 dígitos"),
   username: z.string().min(2).max(64),
   password: z.string().min(8).max(128),
-  role: z.enum(["ADMIN", "SUPPORT"]).default("SUPPORT"),
+  role: z.enum(["ADMIN", "SUPPORT", "CORRESPONDENT"]).default("SUPPORT"),
 });
 
 // GET /api/agentes - Listar todos los agentes

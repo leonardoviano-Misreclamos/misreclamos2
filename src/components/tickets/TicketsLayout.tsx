@@ -49,7 +49,7 @@ export function TicketsLayout({ children }: { children: React.ReactNode }) {
 function ReclamosSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [role, setRole] = useState<"ADMIN" | "SUPPORT" | null>(null);
+  const [role, setRole] = useState<"ADMIN" | "SUPPORT" | "CORRESPONDENT" | null>(null);
   const [displayName, setDisplayName] = useState<string>("");
 
   useEffect(() => {
@@ -160,7 +160,11 @@ function ReclamosSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
             {displayName}
             {role ? (
               <span className="block text-[10px] text-white/50 mt-0.5">
-                {role === "ADMIN" ? "Administrador" : "Abogado"}
+                {role === "ADMIN"
+                  ? "Administrador"
+                  : role === "CORRESPONDENT"
+                    ? "Abogado Corresponsal"
+                    : "Abogado"}
               </span>
             ) : null}
           </p>

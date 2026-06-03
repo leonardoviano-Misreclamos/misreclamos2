@@ -8,7 +8,7 @@ import { isAdmin, sessionOptions, type SessionData } from "@/lib/auth";
 const updateAgentSchema = z.object({
   name: z.string().min(1).optional(),
   email: z.string().email().optional(),
-  role: z.enum(["ADMIN", "SUPPORT"]).optional(),
+  role: z.enum(["ADMIN", "SUPPORT", "CORRESPONDENT"]).optional(),
 });
 
 // DELETE /api/agentes/[id] - Eliminar agente

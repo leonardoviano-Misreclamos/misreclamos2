@@ -208,7 +208,13 @@ async function getDashboardStats(user: SessionUser) {
 export default async function DashboardPage() {
   const session = await requireSession();
   const stats = await getDashboardStats(session.user!);
-  const displayName = session.user!.name || (session.user!.role === "ADMIN" ? "Administrador" : "Abogado");
+  const displayName =
+    session.user!.name ||
+    (session.user!.role === "ADMIN"
+      ? "Administrador"
+      : session.user!.role === "CORRESPONDENT"
+        ? "Abogado Corresponsal"
+        : "Abogado");
 
   if (!stats) {
     return (

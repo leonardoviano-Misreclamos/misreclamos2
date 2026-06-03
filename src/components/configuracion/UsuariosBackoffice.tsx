@@ -26,7 +26,7 @@ export default function UsuariosBackoffice() {
   const [newName, setNewName] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newPhone, setNewPhone] = useState("");
-  const [newRole, setNewRole] = useState<"ADMIN" | "SUPPORT">("SUPPORT");
+  const [newRole, setNewRole] = useState<"ADMIN" | "SUPPORT" | "CORRESPONDENT">("SUPPORT");
   const [mode, setMode] = useState<"existing" | "new">("existing");
 
   const load = useCallback(async () => {
@@ -131,7 +131,13 @@ export default function UsuariosBackoffice() {
               <tr key={a.id} className="hover:bg-slate-50/80">
                 <td className="px-4 py-3 font-medium text-slate-900">{a.name}</td>
                 <td className="px-4 py-3 text-slate-600">{a.email}</td>
-                <td className="px-4 py-3">{a.role === "ADMIN" ? "Administrador" : "Abogado"}</td>
+                <td className="px-4 py-3">
+                  {a.role === "ADMIN"
+                    ? "Administrador"
+                    : a.role === "CORRESPONDENT"
+                      ? "Abogado Corresponsal"
+                      : "Abogado"}
+                </td>
                 <td className="px-4 py-3 text-slate-600">{a.username || "—"}</td>
                 <td className="px-4 py-3">
                   {a.hasPassword ? (
@@ -212,10 +218,11 @@ export default function UsuariosBackoffice() {
               <label className="block text-sm font-medium text-slate-700 mb-1">Rol en el sistema</label>
               <select
                 value={newRole}
-                onChange={(e) => setNewRole(e.target.value as "ADMIN" | "SUPPORT")}
+                onChange={(e) => setNewRole(e.target.value as "ADMIN" | "SUPPORT" | "CORRESPONDENT")}
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
               >
                 <option value="SUPPORT">Abogado (solo casos asignados)</option>
+                <option value="CORRESPONDENT">Abogado Corresponsal (solo casos asignados)</option>
                 <option value="ADMIN">Administrador</option>
               </select>
             </div>

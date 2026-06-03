@@ -13,7 +13,7 @@ const createSchema = z.object({
   name: z.string().min(1).optional(),
   email: z.string().email().optional(),
   phone: z.string().min(6).optional(),
-  role: z.enum(["ADMIN", "SUPPORT"]).optional(),
+  role: z.enum(["ADMIN", "SUPPORT", "CORRESPONDENT"]).optional(),
 });
 
 /** GET: lista abogados + estado de login */

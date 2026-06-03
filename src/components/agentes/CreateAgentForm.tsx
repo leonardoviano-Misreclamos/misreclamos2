@@ -13,7 +13,7 @@ export function CreateAgentForm() {
     phone: "",
     username: "",
     password: "",
-    role: "SUPPORT" as "ADMIN" | "SUPPORT",
+    role: "SUPPORT" as "ADMIN" | "SUPPORT" | "CORRESPONDENT",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -149,10 +149,16 @@ export function CreateAgentForm() {
           </label>
           <select
             value={formData.role}
-            onChange={(e) => setFormData({ ...formData, role: e.target.value as "ADMIN" | "SUPPORT" })}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                role: e.target.value as "ADMIN" | "SUPPORT" | "CORRESPONDENT",
+              })
+            }
             className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none"
           >
             <option value="SUPPORT">Abogado</option>
+            <option value="CORRESPONDENT">Abogado Corresponsal</option>
             <option value="ADMIN">Admin</option>
           </select>
         </div>

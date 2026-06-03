@@ -66,7 +66,11 @@ export function AgentsList({ agentes }: { agentes: Agent[] }) {
                         : "bg-blue-100 text-blue-800"
                     }`}
                   >
-                    {agente.role === "ADMIN" ? "Admin" : "Abogado"}
+                    {agente.role === "ADMIN"
+                      ? "Admin"
+                      : agente.role === "CORRESPONDENT"
+                        ? "Abogado Corresponsal"
+                        : "Abogado"}
                   </span>
                 </div>
                 <div className="mt-1 text-xs text-slate-500">{agente.email}</div>

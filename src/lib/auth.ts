@@ -6,7 +6,7 @@ export type SessionUser = {
   id: string;
   email?: string;
   name?: string;
-  role: "ADMIN" | "SUPPORT";
+  role: "ADMIN" | "SUPPORT" | "CORRESPONDENT";
   /** Sesión legacy (APP_PASSWORD + usuario admin) sin fila en AgentUser */
   legacy?: boolean;
 };
