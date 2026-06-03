@@ -30,7 +30,18 @@ export function AcceptCaseButton({ ticketId, currentStatus }: Props) {
         const data = await res.json().catch(() => ({}));
 
         if (!res.ok) {
-          setError(data?.error || "No se pudo aceptar el caso");
+          const base = data?.error || "No se pudo aceptar el caso";
+          const httpExt =
+            typeof data?.intakeHttpStatus === "number"
+              ? ` [externo HTTP ${data.intakeHttpStatus}]`
+              : "";
+          const detail =
+            typeof data?.details === "string" && data.details.trim()
+              ? data.details.trim().slice(0, 500)
+              : null;
+          setError(
+            detail ? `${base}${httpExt} — ${detail}` : `${base}${httpExt}`
+          );
           return;
         }
 

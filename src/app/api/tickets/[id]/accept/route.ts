@@ -98,6 +98,7 @@ export async function POST(
         {
           error: "No se pudo enviar el caso a la plataforma externa",
           details: intakeResponseText || `HTTP ${intakeResponse.status}`,
+          intakeHttpStatus: intakeResponse.status,
         },
         { status: 502 }
       );

@@ -4,11 +4,14 @@ import { getIronSession } from "iron-session";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { isAdmin, sessionOptions, type SessionData } from "@/lib/auth";
+import { hashPassword, normalizeUsername } from "@/lib/password";
 
 const createAgentSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
   phone: z.string().min(10, "El teléfono debe tener al menos 10 dígitos"),
+  username: z.string().min(2).max(64),
+  password: z.string().min(8).max(128),
   role: z.enum(["ADMIN", "SUPPORT"]).default("SUPPORT"),
 });
 
@@ -48,7 +51,8 @@ export async function POST(req: Request) {
     }, { status: 400 });
   }
 
-  const { name, email, phone, role } = parsed.data;
+  const { name, email, phone, role, username, password } = parsed.data;
+  const normalizedUsername = normalizeUsername(username);
 
   // Verificar si ya existe
   const existing = await prisma.agentUser.findUnique({
@@ -61,11 +65,32 @@ export async function POST(req: Request) {
     }, { status: 400 });
   }
 
-  const agente = await prisma.agentUser.create({
-    data: { name, email, phone, role },
+  const existingUsername = await prisma.agentUser.findFirst({
+    where: { username: normalizedUsername },
+    select: { id: true },
   });
 
-  console.log(`[Agentes] ✅ Agente creado: ${name} (${email}, ${phone})`);
+  if (existingUsername) {
+    return NextResponse.json(
+      { error: "Ese nombre de usuario ya está en uso" },
+      { status: 400 }
+    );
+  }
+
+  const passwordHash = await hashPassword(password);
+
+  const agente = await prisma.agentUser.create({
+    data: {
+      name,
+      email,
+      phone,
+      role,
+      username: normalizedUsername,
+      passwordHash,
+    },
+  });
+
+  console.log(`[Agentes] ✅ Agente creado con acceso: ${name} (${email}, ${phone})`);
 
   return NextResponse.json({ agente }, { status: 201 });
 }

@@ -11,12 +11,23 @@ export function CreateAgentForm() {
     name: "",
     email: "",
     phone: "",
+    username: "",
+    password: "",
     role: "SUPPORT" as "ADMIN" | "SUPPORT",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) return;
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim() ||
+      !formData.username.trim() ||
+      formData.password.length < 8
+    ) {
+      setError("Completá todos los campos. La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -36,7 +47,14 @@ export function CreateAgentForm() {
       }
 
       // Limpiar formulario
-      setFormData({ name: "", email: "", phone: "", role: "SUPPORT" });
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        username: "",
+        password: "",
+        role: "SUPPORT",
+      });
       router.refresh();
     } catch {
       setError("Error de red");
@@ -47,7 +65,7 @@ export function CreateAgentForm() {
 
   return (
     <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-      <h2 className="text-lg font-semibold text-slate-900 mb-4">Agregar Agente</h2>
+      <h2 className="text-lg font-semibold text-slate-900 mb-4">Agregar Agente con Acceso</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -92,6 +110,37 @@ export function CreateAgentForm() {
           <p className="mt-1 text-xs text-slate-500">
             Formato: 549 + código de área + número (sin espacios)
           </p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Usuario de acceso
+          </label>
+          <input
+            type="text"
+            value={formData.username}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none"
+            placeholder="Ej: juan.perez"
+            autoComplete="username"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Contraseña de acceso
+          </label>
+          <input
+            type="password"
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none"
+            placeholder="Mínimo 8 caracteres"
+            autoComplete="new-password"
+            minLength={8}
+            required
+          />
         </div>
 
         <div>
