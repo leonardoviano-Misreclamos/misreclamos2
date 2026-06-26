@@ -75,6 +75,21 @@ async function classifyTicketTypeIfEmpty(ticketId: string) {
   }
 }
 
+/**
+ * Ejecuta tareas de post-procesamiento sin bloquear la respuesta del webhook.
+ * Si estas tareas tardan, el bot puede quedar "escribiendo" y cortar por timeout.
+ */
+function runPostProcessingAsync(ticketId: string) {
+  void (async () => {
+    try {
+      await updateTicketSummary(ticketId);
+      await classifyTicketTypeIfEmpty(ticketId);
+    } catch (error: any) {
+      console.error("[Inbound] ⚠️ Error en post-procesamiento async:", error?.message);
+    }
+  })();
+}
+
 export async function POST(req: Request) {
   const payload = await req.json().catch(() => null);
   if (!payload) {
@@ -394,9 +409,8 @@ async function processIncomingMessage({ eventName, data }: { eventName: string; 
     });
   }
 
-  // Generar/actualizar resumen de la conversación con IA
-  await updateTicketSummary(ticket.id);
-  await classifyTicketTypeIfEmpty(ticket.id);
+  // Disparar IA en background para no bloquear webhook de BuilderBot
+  runPostProcessingAsync(ticket.id);
 
   return NextResponse.json({ 
     ok: true, 
@@ -693,9 +707,8 @@ async function processOutgoingMessage({ eventName, data }: { eventName: string; 
     });
   }
 
-  // Generar/actualizar resumen de la conversación con IA
-  await updateTicketSummary(ticket.id);
-  await classifyTicketTypeIfEmpty(ticket.id);
+  // Disparar IA en background para no bloquear webhook de BuilderBot
+  runPostProcessingAsync(ticket.id);
 
   console.log(`✅ Mensaje saliente del abogado guardado en reclamo ${ticket.code}`);
 
